@@ -1,0 +1,54 @@
+#1
+Troubleshoot Error: PS C:\Sujeet\GoWorkspace\hello\go-well-examples-coffee> go get github.com/sujeet-banerjee/go-well-examples-coffee@v0.1.0
+
+go: package github.com/sujeet-banerjee/go-well-examples-coffee is in the main module, so can't request version v0.1.0
+
+PS C:\Sujeet\GoWorkspace\hello\go-well-examples-coffee>
+
+Ah, this is a classic "Inception" moment in Go!
+
+You are getting this error because you are trying to download the module while you are still standing inside of it.
+
+Why the error happened:
+When you run go get, Go looks at the go.mod file in your current folder to add the dependency.
+Right now, your terminal is inside C:\Sujeet\GoWorkspace\hello\go-well-examples-coffee. The go.mod in that folder already says: "I am github.com/sujeet-banerjee/go-well-examples-coffee".
+
+Go essentially said: "Wait, you are asking me to download version v0.1.0 of this module, but you are currently editing the master source code of this exact module! You can't depend on yourself."
+
+How to fix it:
+To use your newly published library, you need to step outside of the coffee module and go back to your original consumer project (your hello project).
+
+Step 1: Go back to your main hello project
+Change your directory back to the root where your original hello.go file is.
+
+PowerShell
+cd C:\Sujeet\GoWorkspace\hello
+Step 2: Download your remote module
+Now that you are in a different module, you can safely pull down your published coffee library:
+
+PowerShell
+go get github.com/sujeet-banerjee/go-well-examples-coffee@v0.1.0
+Step 3: Use it in your code!
+Open up your original hello.go file (inside the hello folder) and import your brand new remote library:
+
+Go
+package main
+
+import (
+    "fmt"
+    // Import your published module!
+    "github.com/sujeet-banerjee/go-well-examples-coffee" 
+)
+
+func main() {
+    fmt.Println("Hello, World!")
+    
+    // Call whatever function you exported in your coffee module
+    // For example, if you wrote a func Brew() in the coffee package:
+    // coffee.Brew() 
+}
+Now run go run . from inside the hello folder, and you will see your code executing from the library you just published to the internet!
+--------------------------------
+
+
+#2
